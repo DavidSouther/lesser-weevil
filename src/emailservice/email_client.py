@@ -35,23 +35,11 @@ except:
     tracer_interceptor = client_interceptor.OpenCensusClientInterceptor()
 
 
-class BurstyException(Exception):
-    pass
-
-
-def bursty_crash():
-    """Emit an error if called in the first five minutes of odd-number hours."""
-    now = time.localtime()
-    if (now.tm_hour % 2) & (now.tm_min < 5):
-        raise BurstyException('A bursty crash.')
-
-
 def send_confirmation_email(email, order):
     channel = grpc.insecure_channel('0.0.0.0:8080')
     channel = grpc.intercept_channel(channel, tracer_interceptor)
     stub = demo_pb2_grpc.EmailServiceStub(channel)
     try:
-        bursty_crash()
         stub.SendOrderConfirmation(demo_pb2.SendOrderConfirmationRequest(
             email=email,
             order=order
