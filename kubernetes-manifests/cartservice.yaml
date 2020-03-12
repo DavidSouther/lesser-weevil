@@ -18,7 +18,7 @@ metadata:
   name: cartservice
 spec:
   revisionHistoryLimit: 1
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: cartservice
